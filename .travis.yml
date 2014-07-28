@@ -1,0 +1,4 @@
+language: python
+script:
+  - pip install django
+  - python generate.py
