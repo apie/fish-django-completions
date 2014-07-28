@@ -5,9 +5,7 @@ settings.configure()
 
 head = """# completion for django
 function __fish_complete_django -d "Completions for django and its aliases" --argument-names cmd
-\techo "load django completions for: $cmd"
 \tcomplete -x -c $cmd
-\techo $cmd
 """
 
 foot = """
