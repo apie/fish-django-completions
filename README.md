@@ -1,5 +1,6 @@
 # Django Fish Completions
 
+[![Build Status](https://travis-ci.org/Duncaen/fish-django-completions.svg?branch=master)](https://travis-ci.org/Duncaen/fish-django-completions)
 Django completions for Fish Shell.
 
 ## Quickstart
