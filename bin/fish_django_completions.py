@@ -18,16 +18,17 @@ def generate_completions(filename=None, apps=None):
 
     # configure django default settings
     settings.configure()
-    django.setup()
 
     # add extra apps
     if apps:
         settings.INSTALLED_APPS += tuple(apps)
 
+    django.setup()
+
     dj_commands = get_commands()
 
     # generate subcommands
-    for cmd in dj_commands:
+    for cmd in sorted(dj_commands):
         c = load_command_class(dj_commands[cmd], cmd)
         commands.append('complete -c $cmd -n \'__fish_use_subcommand\' -a %s -d "%s"' % (cmd, clean_help(c.help)))
 
@@ -41,12 +42,14 @@ def generate_completions(filename=None, apps=None):
 
     # generate options
     for opt in dj_options:
-        s, l = None, None
-        for opt_string in opt.option_strings:
-            if len(opt_string) == 2:
-                s = '-s %s' % opt_string[1:]
-            else:
-                l = '-l %s' % opt_string[2:]
+        s = '-s %s' % opt._short_opts[0][1:] if hasattr(opt, '_short_opts') and opt._short_opts else None
+        l = '-l %s' % opt._long_opts[0][2:] if hasattr(opt, '_long_opts') and opt._long_opts else None
+        if hasattr(opt, 'option_strings'):
+            for opt_string in opt.option_strings:
+                if len(opt_string) == 2:
+                    s = '-s %s' % opt_string[1:]
+                else:
+                    l = '-l %s' % opt_string[2:]
         d = '-d "%s"' % clean_help(opt.help) if opt.help else None
         a = '-a "%s"' % ' '.join([str(choice) for choice in opt.choices]) if opt.choices else None
         options.append('complete -c $cmd -n \'__fish_seen_subcommand_from %s\' %s' % (
@@ -67,7 +70,7 @@ def generate_completions(filename=None, apps=None):
     )
     f.write("\n\t".join(commands))
     f.write("\n\n\t")
-    f.write("\n\t".join(options))
+    f.write("\n\t".join(sorted(options)))
     f.write("\nend")
     f.close()
 
