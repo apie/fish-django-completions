@@ -1,14 +1,10 @@
 language: python
 python:
-    - "2.6"
-    - "2.7"
+    - "3.4"
 env:
-    - DJANGO=1.3 APPS=
-    - DJANGO=1.4 APPS=
-    - DJANGO=1.5 APPS=
-    - DJANGO=1.6 APPS="-a south"
+    - DJANGO=1.8
+    - DJANGO=1.9
 install:
     - pip install -q Django==$DJANGO --use-mirrors
-    - pip install South --use-mirrors
 script:
-    - python bin/fish_django_completions.py $APPS
+    - python bin/fish_django_completions.py
