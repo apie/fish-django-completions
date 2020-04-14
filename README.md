@@ -1,6 +1,6 @@
 # Django Fish Completions
 
-[![Build Status](https://travis-ci.org/apie/fish-django-completions.svg?branch=master)](https://travis-ci.org/apie/fish-django-completions)
+[![Build Status](https://travis-ci.com/apie/fish-django-completions.svg?branch=master)](https://travis-ci.com/apie/fish-django-completions)
 
 Django completions for Fish Shell.
 
