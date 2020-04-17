@@ -19,6 +19,15 @@ optional arguments:
   -f FILENAME, --filename FILENAME
 ```
 
+## As management command
+Loads all your configured apps.
+```
+usage: ./manage.py fish_django_completions [-h] [-f FILENAME]
+optional arguments:
+  -h, --help            show this help message and exit
+  -f FILENAME, --filename FILENAME
+```
+
 ### Example
 
 With South commands
