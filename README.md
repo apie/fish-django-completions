@@ -4,7 +4,7 @@
 
 Django completions for Fish Shell.
 
-## Quickstart
+## Quickstart (general django-completions)
 
 1. Download [__fish_complete_django.fish](__fish_complete_django.fish) to `~/.config/fish/functions/`.
 2. Append the following to `~/.config/fish/config.fish`:
@@ -12,8 +12,8 @@ Django completions for Fish Shell.
     __fish_complete_django django-admin.py
     __fish_complete_django manage.py
 ```
-## Custom
 
+## Custom (add completions for your own management commands)
 ```
 usage: fish_django_completions.py [-h] [-a APPS [APPS ...]] [-f FILENAME]
 optional arguments:
@@ -22,7 +22,7 @@ optional arguments:
   -f FILENAME, --filename FILENAME
 ```
 
-## As management command
+## Add as management command (to add completions for your own management commands)
 Loads all your configured apps. First copy the file `fish_django_completions.py` into the folder with your other management commands. Then run:
 ```
 usage: ./manage.py fish_django_completions [-h] [-f FILENAME]
