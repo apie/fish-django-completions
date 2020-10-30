@@ -6,7 +6,7 @@ Django completions for Fish Shell.
 
 ## Quickstart (general django-completions)
 
-1. Download [__fish_complete_django.fish](__fish_complete_django.fish) to `~/.config/fish/functions/`.
+1. Download [__fish_complete_django.fish](output/) for your Django version to `~/.config/fish/functions/`.
 2. Append the following to `~/.config/fish/config.fish`:
 ```
     __fish_complete_django django-admin.py
