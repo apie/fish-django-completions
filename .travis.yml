@@ -8,4 +8,4 @@ env:
 install:
     - pip install -q Django==$DJANGO
 script:
-    - python bin/fish_django_completions.py
+    - python fish_django_completions.py
