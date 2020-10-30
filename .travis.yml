@@ -8,4 +8,13 @@ env:
 install:
     - pip install -q Django==$DJANGO
 script:
+    # Test running as standalone script
     - python fish_django_completions.py
+    # Test running as management command
+    - python -m django startproject testproject
+    - cd testproject
+    - ./manage.py startapp testapp
+    sed "s/INSTALLED_APPS = \[/INSTALLED_APPS = \['testproject.testapp',/" testproject/settings.py -i
+    - mkdir -p testproject/testapp/management/commands
+    - cp ../fish_django_completions.py testproject/testapp/management/commands
+    - ./manage.py fish_django_completions
