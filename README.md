@@ -25,6 +25,3 @@ A script to generate Django completions for Fish Shell.
 
 * `python manage.py` cant be completed at the moment, use `./manage.py`
 
-## License
-
-The [original repository](https://github.com/Duncaen/fish-django-completions) did not specify a license. I am however publicing it under the MIT license.
