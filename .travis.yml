@@ -1,10 +1,20 @@
 language: python
 python:
-    - "3.4"
+    - "3.7"
 env:
-    - DJANGO=1.8
-    - DJANGO=1.9
+    - DJANGO=2.2
+    - DJANGO=3.0
+    - DJANGO=3.1
 install:
-    - pip install -q Django==$DJANGO --use-mirrors
+    - pip install -q Django==$DJANGO
 script:
-    - python bin/fish_django_completions.py
+    # Test running as standalone script
+    - python fish_django_completions.py
+    # Test running as management command
+    - python -m django startproject testproject
+    - cd testproject
+    - ./manage.py startapp testapp
+    - sed "s/INSTALLED_APPS = \[/INSTALLED_APPS = \['testproject.testapp',/" testproject/settings.py -i
+    - mkdir -p testproject/testapp/management/commands
+    - cp ../fish_django_completions.py testproject/testapp/management/commands
+    - ./manage.py fish_django_completions
