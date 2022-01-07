@@ -7,14 +7,14 @@ env:
     - DJANGO=3.1
 install:
     - pip install -q Django==$DJANGO
+    - pip install .
 script:
     # Test running as standalone script
-    - python fish_django_completions.py
+    - python src/fish_completions/management/commands/fish_completions.py
     # Test running as management command
     - python -m django startproject testproject
     - cd testproject
     - ./manage.py startapp testapp
-    - sed "s/INSTALLED_APPS = \[/INSTALLED_APPS = \['testproject.testapp',/" testproject/settings.py -i
-    - mkdir -p testproject/testapp/management/commands
-    - cp ../fish_django_completions.py testproject/testapp/management/commands
-    - ./manage.py fish_django_completions
+    - sed "s/INSTALLED_APPS = \[/INSTALLED_APPS = \['fish_completions',/" testproject/settings.py -i
+    - ./manage.py fish_completions --enable
+    - ./manage.py fish_completions
