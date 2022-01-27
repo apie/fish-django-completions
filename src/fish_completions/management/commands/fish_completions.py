@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 import logging
+import os
 import sys
+from pathlib import Path
+from shutil import copy
 
 from django.core.management import get_commands, load_command_class
 from django.core.management.base import BaseCommand
@@ -11,9 +14,31 @@ logger = logging.getLogger(__name__)
 class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument('-f', '--filename', type=str)
+        parser.add_argument(
+            '--enable',
+            help="Place completion script in Fish config folder",
+            action="store_true"
+        )
 
     def handle(self, filename, **options):
-        generate_completions(filename)
+        if options.get("enable"):
+            file = enable_completions()
+            self.stdout.write(self.style.SUCCESS(f'Successfully saved {file}'))
+        else:
+            generate_completions(filename)
+
+
+def enable_completions() -> str:
+    """Copy `manage.py.fish` to Fish's completion directory."""
+    xdg_config_home = Path(os.getenv("XDG_CONFIG_HOME", "~/.config"))
+    completions_folder = (xdg_config_home / "fish" / "completions").expanduser()
+    completions_folder.mkdir(parents=True, exist_ok=True)
+    target = completions_folder / "manage.py.fish"
+
+    completion_file =  (Path(__file__).parents[2] / "manage.py.fish").resolve()
+    copy(completion_file, target)
+    return target
+
 
 
 def clean_help(h):
@@ -35,7 +60,7 @@ def generate_completions(filename, **options):
             logger.exception(e)
             continue
 
-        commands.add('complete -c $cmd -n \'__fish_use_subcommand\' -a %s -d "%s"' % (cmd, clean_help(c.help)))
+        commands.add('complete -c manage.py -n \'__fish_use_subcommand\' -a %s -d "%s"' % (cmd, clean_help(c.help)))
         # collect all options in a list
         # to group them at the end
         parser = c.create_parser('', cmd)
@@ -53,22 +78,18 @@ def generate_completions(filename, **options):
                         long = '-l %s' % opt_string[2:]
             description = '-d "%s"' % clean_help(opt.help) if hasattr(opt, 'help') and opt.help else None
             alternatives = '-a "%s"' % ' '.join([str(choice) for choice in opt.choices]) if hasattr(opt, 'choices') and opt.choices else None
-            options.add('complete -c $cmd -n \'__fish_seen_subcommand_from %s\' %s' % (
+            options.add('complete -c manage.py -n \'__fish_seen_subcommand_from %s\' %s' % (
                 cmd,
                 ' '.join(filter(None, [short, long, description, alternatives]))
             ))
 
     with open(filename, 'w') if filename else sys.stdout as f:
-        f.write(
-            "# completion for django\n" +
-            "function __fish_complete_django -d \"Completions for django\" --argument-names cmd" +
-            "\n\tcomplete -x -c $cmd" +
-            "\n\n\t"
-        )
-        f.write("\n\t".join(sorted(commands)))
-        f.write("\n\n\t")
-        f.write("\n\t".join(sorted(options)))
-        f.write("\nend")
+        f.write("complete --erase -c manage.py\n")
+        f.write("complete -x -c manage.py\n")
+        f.write("complete -c django-admin --wraps manage.py\n")
+        f.write("complete -c django-admin.py --wraps manage.py\n")
+        f.write("\n".join(sorted(commands)))
+        f.write("\n".join(sorted(options)))
 
 
 if __name__ == '__main__':
